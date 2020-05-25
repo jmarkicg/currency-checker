@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="jmarkic" id="2020-23-17-1">
+        <sql>
+            create table currency (
+                id int8 not null,
+                name varchar(255),
+                code varchar(255),
+                primary key (id));
+
+            create table currency_rate (
+                id int8 not null,
+                from_currency_id int8 not null,
+                to_currency_id int8 not null,
+                rate varchar(255),
+                date timestamp,
+                primary key (id));
+
+
+            alter table currency_rate add constraint FK_CURR_RATE_FROMCURR_ID foreign key (from_currency_id) references currency;
+            alter table currency_rate add constraint FK_CURR_RATE_TOCURR_ID foreign key (to_currency_id) references currency;
+
+
+            CREATE INDEX currency_rate_index ON currency_rate
+            (from_currency_id, to_currency_id, date);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
